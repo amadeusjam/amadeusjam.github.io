@@ -38,9 +38,13 @@
     var AUTH_REDIRECT_ROUTE = 'auth-redirect';
     var POST_LOGOUT_REDIRECT_ROUTE = 'logout-redirect';
 
-    debugger
     var params = getParams(window.location.href);
     var path = "/mobile/";
+
+    params.ST = "NCMTDEMO";
+    params.page = "authredirect";
+    params.feature = "openid";
+
     var redirectRoute = "";
     if (params.page === 'authredirect') {
       redirectRoute = buildURL(path, AUTH_REDIRECT_ROUTE, ["feature", "code", "state", "access_token", "id_token"], params);
@@ -49,8 +53,12 @@
     } else {
       redirectRoute = buildURL(path, "", [], params);
     }
-    window.location.assign(redirectRoute);
 
+    var origin = "https://ncebpm1195aph01.etv.nce.amadeus.net";
+    var fullPath = origin + redirectRoute;
+    // window.location.assign(redirectRoute);
+
+    window.location.href = fullPath;
   </script>
 </head>
 
