@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>AppAuthJS Redirect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <noscript>
+    <h1>Please enable JavaScript to use CheckMyTrip app</h1>
+  </noscript>
+  <script type="text/javascript">
+    // Function to extract params from URL (Extracts key value pairs with '=' in between which comes after ? # &)
+    var getParams = function (url) {
+      var regex = /[?#&]([^=#]+)=([^&#?]*)/g;
+      var decodedUrl = decodeURIComponent(url);
+      var params = {};
+      var match = regex.exec(decodedUrl);
+      while (match) {
+        params[match[1]] = match[2];
+        match = regex.exec(decodedUrl);
+      }
+      return params;
+    }
+    // Function to build the redirect URL
+    var buildURL = function (path, route, paramKeys, params) {
+      var finalPath = path + "?" + "ST=" + params.ST + "#" + route + "?";
+      var isFirstParamAdded = false;
+      for (var i = 0; i < paramKeys.length; i++) {
+        if (params[paramKeys[i]]) {
+          if (isFirstParamAdded) {
+            finalPath = finalPath + "&";
+          }
+          finalPath = finalPath + paramKeys[i] + "=" + params[paramKeys[i]];
+          isFirstParamAdded = true;
+        }
+      }
+      return finalPath;
+    }
+    var AUTH_REDIRECT_ROUTE = 'auth-redirect';
+    var POST_LOGOUT_REDIRECT_ROUTE = 'logout-redirect';
+
+    debugger
+    var params = getParams(window.location.href);
+    var path = "/mobile/";
+    var redirectRoute = "";
+    if (params.page === 'authredirect') {
+      redirectRoute = buildURL(path, AUTH_REDIRECT_ROUTE, ["feature", "code", "state", "access_token", "id_token"], params);
+    } else if (params.page === 'authlogout') {
+      redirectRoute = buildURL(path, POST_LOGOUT_REDIRECT_ROUTE, ["feature"], params);
+    } else {
+      redirectRoute = buildURL(path, "", [], params);
+    }
+    window.location.assign(redirectRoute);
+
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
